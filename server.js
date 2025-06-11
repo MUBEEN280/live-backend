@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const fetch = require("node-fetch");
 
 const authRoutes = require("./routes/authRoutes");
 const tileRoutes = require("./routes/tileRoute");
@@ -15,7 +16,7 @@ const app = express();
 // CORS config
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://live-tiledashboard.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
       "Content-Type",
@@ -29,16 +30,31 @@ app.use(
   })
 );
 
-// Log only important requests
+// Log non-GET requests
 app.use((req, res, next) => {
-  // Skip logging for GET requests to reduce console spam
-  if (req.method !== 'GET') {
+  if (req.method !== "GET") {
     console.log(`${req.method} ${req.url}`);
   }
   next();
 });
 
 app.use(express.json());
+
+// Test route to check deployment
+app.get("/test", (req, res) => {
+  res.send("Test route is working!");
+});
+
+// Route to get backend's outgoing IP
+app.get("/my-ip", async (req, res) => {
+  try {
+    const response = await fetch("https://api.ipify.org?format=json");
+    const data = await response.json();
+    res.json({ ip: data.ip });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get IP" });
+  }
+});
 
 // API routes
 app.use("/api/tiles", tileRoutes);
