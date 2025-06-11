@@ -19,7 +19,8 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://live-tiledashboard.vercel.app",
-      "https://frontend-live-oi6a.vercel.app"
+      "https://frontend-live-oi6a.vercel.app",
+      "https://frontend-live-yxbt.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
@@ -27,6 +28,8 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "Accept",
+      "Origin",
+      "Access-Control-Allow-Origin"
     ],
     credentials: true,
     preflightContinue: false,
@@ -34,6 +37,14 @@ app.use(
     exposedHeaders: ["Content-Range", "X-Content-Range"]
   })
 );
+
+// Add additional CORS headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  next();
+});
 
 // Log non-GET requests
 app.use((req, res, next) => {
