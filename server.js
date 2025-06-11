@@ -16,7 +16,11 @@ const app = express();
 // CORS config
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://live-tiledashboard.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://live-tiledashboard.vercel.app",
+      "https://frontend-live-oi6a.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
       "Content-Type",
@@ -27,6 +31,7 @@ app.use(
     credentials: true,
     preflightContinue: false,
     optionsSuccessStatus: 204,
+    exposedHeaders: ["Content-Range", "X-Content-Range"]
   })
 );
 
